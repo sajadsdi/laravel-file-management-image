@@ -35,13 +35,18 @@ class ResizeImageJob implements ShouldQueue
             $service->setImage($this->tempPath);
         }
 
+        if($this->config['resize_convert'] && $this->config['convert_ext']) {
+            $this->file['path'] = str_replace('.'.$this->file['ext'] ,'.'.$this->config['convert_ext'] ,$this->file['path']);
+            $this->file['ext'] = $this->config['convert_ext'];
+        }
+
         foreach ($this->heights as $height) {
             $imageHeight = $service->getImage()->height();
 
             if ($imageHeight > $height) {
-                $this->putFile($this->config['disk'], str_replace('_fm', '_' . $height, $this->file['path']), $service->resize($height)->encode($this->file['ext'], $this->config['quality']));
+                $this->putFile($this->file['disk'], str_replace('_fm', '_' . $height, $this->file['path']), $service->resize($height)->encode($this->file['ext'], $this->config['quality']));
             } elseif ($this->config['resize_duplicate']) {
-                $this->putFile($this->config['disk'], str_replace('_fm', '_' . $height, $this->file['path']), $service->encode($this->file['ext'], $this->config['quality']));
+                $this->putFile($this->file['disk'], str_replace('_fm', '_' . $height, $this->file['path']), $service->encode($this->file['ext'], $this->config['quality']));
             }
         }
     }

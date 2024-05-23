@@ -36,7 +36,9 @@ class ProcessImageBeforeUploadJob implements ShouldQueue
         }
 
         //optimize and fix exif and update temp file
-        file_put_contents($this->tempPath, $service->setImage($this->tempPath)->fixExifOrientation()->encode($this->file['ext'], $this->config['quality']));
+        if($this->config['fix_exif']){
+            file_put_contents($this->tempPath, $service->setImage($this->tempPath)->fixExifOrientation()->encode($this->file['ext'], $this->config['quality']));
+        }
     }
 
 }
