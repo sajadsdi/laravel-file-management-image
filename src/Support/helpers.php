@@ -3,13 +3,21 @@
 
 if (!function_exists('get_image_size')) {
     /**
-     * @param string|null $name
-     * @param mixed|null $value
-     * @return mixed|Seo
-     * @throws BindingResolutionException
+     * @param string $path
+     * @param int $size 
+     * @param string|null $type use type if enable convert on resize
      */
-    function get_image_size(string $path = null, int $size = 300): string
+    function get_image_size(string $path, int $size = 300, ?string $type = null): string
     {
-        return str_replace('_fm', '_' . $size, $path);
+        $newPath = str_replace('_fm', '_' . $size, $path);
+
+        if ($type) {
+            $exdot = explode('.', $newPath);
+            $oldType = $exdot[count($exdot) -1];
+
+            $newPath = str_replace('.'.$oldType,'.'.$type, $newPath);
+        }
+
+        return $newPath;
     }
 }
