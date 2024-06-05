@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Sajadsdi\LaravelFileManagement\Concerns\StorageToolsTrait;
+use Sajadsdi\LaravelFileManagement\Jobs\Update\UpdateFileDetails;
 use Sajadsdi\LaravelFileManagementImage\Exceptions\ImageNotSetInImageServiceException;
 use Sajadsdi\LaravelFileManagementImage\Services\ImageService;
 
@@ -35,19 +36,33 @@ class ResizeImageJob implements ShouldQueue
             $service->setImage($this->tempPath);
         }
 
-        if($this->config['resize_convert'] && $this->config['convert_ext']) {
-            $this->file['path'] = str_replace('.'.$this->file['ext'] ,'.'.$this->config['convert_ext'] ,$this->file['path']);
+        if ($this->config['resize_convert'] && $this->config['convert_ext']) {
+            $this->file['path'] = str_replace('.' . $this->file['ext'], '.' . $this->config['convert_ext'], $this->file['path']);
             $this->file['ext'] = $this->config['convert_ext'];
         }
 
+        $resizeDetails = [];
+
         foreach ($this->heights as $height) {
             $imageHeight = $service->getImage()->height();
+            $resizePath = str_replace('_fm', '_' . $height, $this->file['path']);
 
             if ($imageHeight > $height) {
-                $this->putFile($this->file['disk'], str_replace('_fm', '_' . $height, $this->file['path']), $service->resize($height)->encode($this->file['ext'], $this->config['quality']));
+                $resizeDetails[$height]['path'] = $resizePath;
+                $resizeDetails[$height]['disk'] = $this->file['disk'];
+
+                $this->putFile($this->file['disk'], $resizePath, $service->resize($height)->encode($this->file['ext'], $this->config['quality']));
+
             } elseif ($this->config['resize_duplicate']) {
-                $this->putFile($this->file['disk'], str_replace('_fm', '_' . $height, $this->file['path']), $service->encode($this->file['ext'], $this->config['quality']));
+                $resizeDetails[$height]['path'] = $resizePath;
+                $resizeDetails[$height]['disk'] = $this->file['disk'];
+
+                $this->putFile($this->file['disk'], $resizePath, $service->encode($this->file['ext'], $this->config['quality']));
             }
+        }
+
+        if($resizeDetails) {
+            UpdateFileDetails::dispatchSync($this->file['id'], ['resize' => $resizeDetails], $this->config['queue']);
         }
     }
 
