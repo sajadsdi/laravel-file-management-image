@@ -1,9 +1,9 @@
 <?php
 
-namespace Sajadsdi\LaravelFileManagementImage\Listeners;
+namespace Sajadsdi\LaravelFileManagementImage\Listeners\Upload;
 
-use Sajadsdi\LaravelFileManagement\Events\BeforeUpload;
-use Sajadsdi\LaravelFileManagementImage\Jobs\ProcessImageBeforeUploadJob;
+use Sajadsdi\LaravelFileManagement\Events\Upload\BeforeUpload;
+use Sajadsdi\LaravelFileManagementImage\Jobs\Upload\ProcessImageBeforeUploadJob;
 
 class BeforeUploadListener
 {

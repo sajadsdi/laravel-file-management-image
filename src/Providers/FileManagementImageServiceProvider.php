@@ -4,11 +4,19 @@ namespace Sajadsdi\LaravelFileManagementImage\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Sajadsdi\LaravelFileManagement\Events\AfterUpload;
-use Sajadsdi\LaravelFileManagement\Events\BeforeUpload;
+use Sajadsdi\LaravelFileManagement\Events\AfterMoveFile;
+use Sajadsdi\LaravelFileManagement\Events\Delete\AfterDelete;
+use Sajadsdi\LaravelFileManagement\Events\Trash\AfterRestoreTrash;
+use Sajadsdi\LaravelFileManagement\Events\Trash\AfterTrash;
+use Sajadsdi\LaravelFileManagement\Events\Upload\AfterUpload;
+use Sajadsdi\LaravelFileManagement\Events\Upload\BeforeUpload;
 use Sajadsdi\LaravelFileManagementImage\Console\PublishCommand;
-use Sajadsdi\LaravelFileManagementImage\Listeners\AfterUploadListener;
-use Sajadsdi\LaravelFileManagementImage\Listeners\BeforeUploadListener;
+use Sajadsdi\LaravelFileManagementImage\Listeners\AfterMoveFileListener;
+use Sajadsdi\LaravelFileManagementImage\Listeners\Delete\AfterDeleteListener;
+use Sajadsdi\LaravelFileManagementImage\Listeners\Trash\AfterRestoreTrashListener;
+use Sajadsdi\LaravelFileManagementImage\Listeners\Trash\AfterTrashListener;
+use Sajadsdi\LaravelFileManagementImage\Listeners\Upload\AfterUploadListener;
+use Sajadsdi\LaravelFileManagementImage\Listeners\Upload\BeforeUploadListener;
 use Sajadsdi\LaravelFileManagementImage\Services\ImageService;
 
 class FileManagementImageServiceProvider extends ServiceProvider
@@ -43,6 +51,26 @@ class FileManagementImageServiceProvider extends ServiceProvider
         Event::listen(
             AfterUpload::class,
             AfterUploadListener::class
+        );
+
+        Event::listen(
+            AfterTrash::class,
+            AfterTrashListener::class
+        );
+
+        Event::listen(
+            AfterRestoreTrash::class,
+            AfterRestoreTrashListener::class
+        );
+
+        Event::listen(
+            AfterDelete::class,
+            AfterDeleteListener::class
+        );
+
+        Event::listen(
+            AfterMoveFile::class,
+            AfterMoveFileListener::class
         );
     }
 

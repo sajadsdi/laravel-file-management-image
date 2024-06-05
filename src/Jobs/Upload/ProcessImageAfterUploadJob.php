@@ -1,11 +1,12 @@
 <?php
 
-namespace Sajadsdi\LaravelFileManagementImage\Jobs;
+namespace Sajadsdi\LaravelFileManagementImage\Jobs\Upload;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Sajadsdi\LaravelFileManagementImage\Jobs\ResizeImageJob;
 use Sajadsdi\LaravelFileManagementImage\Services\ImageService;
 
 class ProcessImageAfterUploadJob implements ShouldQueue

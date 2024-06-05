@@ -1,9 +1,9 @@
 <?php
 
-namespace Sajadsdi\LaravelFileManagementImage\Listeners;
+namespace Sajadsdi\LaravelFileManagementImage\Listeners\Upload;
 
-use Sajadsdi\LaravelFileManagement\Events\AfterUpload;
-use Sajadsdi\LaravelFileManagementImage\Jobs\ProcessImageAfterUploadJob;
+use Sajadsdi\LaravelFileManagement\Events\Upload\AfterUpload;
+use Sajadsdi\LaravelFileManagementImage\Jobs\Upload\ProcessImageAfterUploadJob;
 
 class AfterUploadListener
 {
